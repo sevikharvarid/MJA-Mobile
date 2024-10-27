@@ -1,0 +1,34 @@
+<!-- res/layout/bottom_sheet_layout.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@drawable/rounded_bottom_sheet_background"
+    android:padding="16dp">
+
+    <!-- Tombol Buat Akun -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/createAccountButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="Buat Akun Baru"
+        android:textColor="@android:color/white"
+        app:backgroundTint="@color/primary_green"
+        app:cornerRadius="10dp"/>
+
+    <!-- Tombol Sudah Punya Akun -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/loginButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sudah Punya Akun"
+        android:textColor="@color/primary_green"
+        app:backgroundTint="@android:color/white"
+        app:strokeColor="@color/primary_green"
+        app:strokeWidth="2dp"
+        app:cornerRadius="10dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="8dp"/>
+</LinearLayout>
