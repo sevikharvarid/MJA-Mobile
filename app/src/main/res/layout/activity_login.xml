@@ -1,0 +1,91 @@
+<!-- res/layout/activity_login.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <!-- Gambar di bagian atas -->
+    <ImageView
+        android:id="@+id/loginImage"
+        android:layout_width="220dp"
+        android:layout_height="220dp"
+        android:layout_marginBottom="12dp"
+        android:src="@drawable/img_login" />
+
+    <!-- Label dan kolom input untuk email -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Email"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
+
+    <!-- EditText untuk Email -->
+    <EditText
+        android:id="@+id/emailEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edit_text_border"
+        android:hint="Masukkan Email"
+        android:textColor="@android:color/black"
+        android:inputType="textEmailAddress"
+        android:padding="12dp" />
+
+    <!-- Spasi antara kolom teks -->
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="16dp" />
+
+    <!-- Label dan kolom input untuk password -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Kata Sandi"
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
+
+
+    <!-- EditText untuk Password -->
+    <EditText
+        android:id="@+id/passwordEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edit_text_border"
+        android:hint="Masukkan kata sandi anda"
+        android:textColor="@android:color/black"
+        android:inputType="textPassword"
+        android:padding="12dp" />
+
+    <!-- Spasi antara kolom teks -->
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="16dp" />
+
+    <!-- Button Masuk -->
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/primary_green"
+        android:text="Masuk"
+        android:textColor="@android:color/white" />
+
+    <!-- Label untuk register -->
+    <TextView
+        android:id="@+id/registerTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="@string/register_text"
+        android:textColor="@color/primary_green"
+        android:textSize="14sp" />
+</LinearLayout>

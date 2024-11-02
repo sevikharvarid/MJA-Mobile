@@ -1,5 +1,6 @@
 package com.example.majujayaaccessories
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -33,6 +34,8 @@ class MainActivity : AppCompatActivity() {
 
         loginButton.setOnClickListener {
             // Tambahkan aksi untuk "Sudah Punya Akun" di sini
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
         }
 
         bottomSheetDialog.setContentView(bottomSheetView)

@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.daemon.common.isDaemonEnabled
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
@@ -15,6 +17,11 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    // Aktifkan viewBinding
+    viewBinding {
+        enable = true
     }
 
     buildTypes {
@@ -42,6 +49,9 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+    implementation(libs.retrofit)
+    implementation(libs.gsonConverter)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

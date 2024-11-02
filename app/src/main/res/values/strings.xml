@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">MajuJayaAccessories</string>
+    <string name="app_name">Maju Jaya Accessoris</string>
+    <string name="register_text">Belum memiliki akun? <b>Daftar disini</b></string>
+
 </resources>
