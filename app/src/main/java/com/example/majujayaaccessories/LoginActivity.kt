@@ -1,5 +1,6 @@
 package com.example.majujayaaccessories
 
+import android.content.Intent
 import android.widget.Toast
 import retrofit2.Call
 import retrofit2.Callback
@@ -44,7 +45,10 @@ class LoginActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
                     if (response.isSuccessful && response.body() != null) {
                         val loginResponse = response.body()
-                        Toast.makeText(this@LoginActivity, "Login sukses: ${loginResponse?.message}", Toast.LENGTH_SHORT).show()
+                        // Arahkan ke halaman Dashboard jika login berhasil
+                        val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
+                        startActivity(intent)
+                        finish()
                         // Arahkan ke halaman berikutnya jika login berhasil
                     } else {
                         showErrorBottomSheet("Terjadi kesalahan login, silahkan mencoba kembali")
