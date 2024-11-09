@@ -2,6 +2,7 @@ package com.example.majujayaaccessories
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
@@ -23,13 +24,17 @@ class MainActivity : AppCompatActivity() {
 
     private fun showBottomSheet() {
         val bottomSheetDialog = BottomSheetDialog(this)
+        bottomSheetDialog.setCanceledOnTouchOutside(false)
+        bottomSheetDialog.setCancelable(false)
         val bottomSheetView: View = LayoutInflater.from(this).inflate(R.layout.bottom_sheet_layout, null)
 
         val createAccountButton: Button = bottomSheetView.findViewById(R.id.createAccountButton)
         val loginButton: Button = bottomSheetView.findViewById(R.id.loginButton)
 
+
         createAccountButton.setOnClickListener {
-            // Tambahkan aksi untuk "Buat Akun" di sini
+            val intent = Intent(this@MainActivity, RegisterActivity::class.java)
+            startActivity(intent)
         }
 
         loginButton.setOnClickListener {

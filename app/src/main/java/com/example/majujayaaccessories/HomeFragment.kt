@@ -1,15 +1,30 @@
 package com.example.majujayaaccessories
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.GridView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.google.gson.Gson
-import org.json.JSONObject
+import com.example.majujayaaccessories.api.ApiClient
+import com.example.majujayaaccessories.models.ProductResponse
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class HomeFragment : Fragment() {
+
+    private var token: String? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            token = it.getString("token")
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -20,73 +35,37 @@ class HomeFragment : Fragment() {
         // Ambil referensi ke GridView
         val productGridView: GridView = view.findViewById(R.id.productGridView)
 
-        // Contoh respons JSON
-        val jsonResponse = """{
-            "status_code": 200,
-            "message": "Success get products",
-            "total_data": 3,
-            "data": [
-                {
-                    "id": 1,
-                    "product_name": "Kopi susu ABC",
-                    "product_description": "Ini adalah kopi susu ABC",
-                    "price": 100000,
-                    "stock": 10,
-                    "image_url": "",
-                    "is_active": true,
-                    "created_at": "2024-10-29T16:04:09.589Z",
-                    "updated_at": "2024-10-29T16:04:09.589Z",
-                    "deleted_at": null
-                },
-                {
-                    "id": 2,
-                    "product_name": "Kopi tubruk orang",
-                    "product_description": "Ini adalah kopi tubruk orang",
-                    "price": 200000,
-                    "stock": 20,
-                    "image_url": "",
-                    "is_active": true,
-                    "created_at": "2024-10-29T16:04:09.589Z",
-                    "updated_at": "2024-10-29T16:04:09.589Z",
-                    "deleted_at": null
-                },
-                {
-                    "id": 3,
-                    "product_name": "Kopi kapal lawd",
-                    "product_description": "Ini adalah kopi kapal lawd",
-                    "price": 400000,
-                    "stock": 40,
-                    "image_url": "",
-                    "is_active": true,
-                    "created_at": "2024-10-29T16:04:09.589Z",
-                    "updated_at": "2024-10-29T16:04:09.589Z",
-                    "deleted_at": null
-                }
-            ]
-        }"""
-
-        val productList = parseJsonResponse(jsonResponse)
-        productGridView.adapter = ProductGridAdapter(requireContext(), productList)
+        // Panggil API untuk mengambil produk
+        if (token != null) {
+            fetchProducts(productGridView, token!!)
+        } else {
+            Toast.makeText(requireContext(), "Token tidak tersedia. Silakan login kembali.", Toast.LENGTH_SHORT).show()
+        }
 
         return view
     }
 
-    private fun parseJsonResponse(jsonResponse: String): List<Product> {
-        val gson = Gson()
-        val jsonObject = JSONObject(jsonResponse)
-        val dataArray = jsonObject.getJSONArray("data")
+    private fun fetchProducts(productGridView: GridView, token: String) {
+        Log.d("HomeFragment", "Token: $token")
+        val call = ApiClient.instance.getProducts("Bearer $token")
+        Log.d("HomeFragment", "Calling API...")
+        call.enqueue(object : Callback<ProductResponse> {
+            override fun onResponse(call: Call<ProductResponse>, response: Response<ProductResponse>) {
+                Log.d("HomeFragment", "API Response: ${response.body()}")
+                if (response.isSuccessful && response.body() != null) {
+                    val productList = response.body()!!.data
+                    productGridView.adapter = ProductGridAdapter(requireContext(), productList)
+                } else {
+                    Log.e("HomeFragment", "Gagal mendapatkan produk: ${response.errorBody()?.string()}")
+                    Toast.makeText(requireContext(), "Gagal mendapatkan data produk", Toast.LENGTH_SHORT).show()
+                }
+            }
 
-        return (0 until dataArray.length()).map { i ->
-            val productJson = dataArray.getJSONObject(i)
-            Product(
-                id = productJson.getInt("id"),
-                productName = productJson.getString("product_name"),
-                productDescription = productJson.getString("product_description"),
-                price = productJson.getInt("price"),
-                stock = productJson.getInt("stock"),
-                imageUrl = productJson.getString("image_url"),
-                isActive = productJson.getBoolean("is_active")
-            )
-        }
+            override fun onFailure(call: Call<ProductResponse>, t: Throwable) {
+                Log.e("HomeFragment", "Error: ${t.message}")
+                Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+
     }
 }

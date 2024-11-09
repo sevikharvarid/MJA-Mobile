@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Maju Jaya Accessoris</string>
     <string name="register_text">Belum memiliki akun? <b>Daftar disini</b></string>
+    <string name="already_register_text">Sudah memiliki akun? <b>Masuk disini</b></string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

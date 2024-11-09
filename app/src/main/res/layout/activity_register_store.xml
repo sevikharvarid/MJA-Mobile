@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:background="#FAFAFA"
+    android:padding="16dp">
+
+    <!-- Gambar di bagian atas -->
+    <ImageView
+        android:id="@+id/loginImage"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginBottom="12dp"
+        android:src="@drawable/img_login" />
+
+
+    <!-- Input untuk nama toko -->
+    <EditText
+        android:id="@+id/storeNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nama Toko"
+        android:inputType="text"
+        android:padding="12dp"
+        android:background="@drawable/edit_text_border"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Input untuk alamat -->
+    <EditText
+        android:id="@+id/addressEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Alamat"
+        android:inputType="textMultiLine"
+        android:gravity="top"
+        android:minLines="3"
+        android:padding="12dp"
+        android:background="@drawable/edit_text_border"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Button Daftar -->
+    <Button
+        android:id="@+id/registerFinalButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="@color/primary_green"
+        android:text="Daftar"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white" />
+
+</LinearLayout>

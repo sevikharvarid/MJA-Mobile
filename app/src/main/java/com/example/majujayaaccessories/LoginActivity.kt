@@ -1,11 +1,13 @@
 package com.example.majujayaaccessories
 
+import android.content.Context
 import android.content.Intent
 import android.widget.Toast
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
@@ -32,6 +34,8 @@ class LoginActivity : AppCompatActivity() {
         // Event untuk pindah ke halaman Daftar jika belum punya akun
         binding.registerTextView.setOnClickListener {
             // Di sini, arahkan ke activity pendaftaran jika diperlukan
+            val intent = Intent(this@LoginActivity, RegisterActivity::class.java)
+            startActivity(intent)
         }
 
         // Panggil fungsi login saat tombol "Masuk" diklik
@@ -46,9 +50,26 @@ class LoginActivity : AppCompatActivity() {
                     if (response.isSuccessful && response.body() != null) {
                         val loginResponse = response.body()
                         // Arahkan ke halaman Dashboard jika login berhasil
-                        val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
-                        startActivity(intent)
-                        finish()
+                        if(loginResponse?.data?.store != null){
+                            // Simpan token di SharedPreferences
+                            val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+                            val editor = sharedPreferences.edit()
+                            val token = loginResponse.data.token
+                            editor.putString("token", token)
+                            editor.apply()
+
+                            Log.d("LoginActivity", "Token: $token")
+
+                            val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
+                            startActivity(intent)
+                            finish()
+                        }else{
+                            val intent = Intent(this@LoginActivity, RegisterStoreActivity::class.java)
+                            intent.putExtra("token", loginResponse?.data?.token)
+                            intent.putExtra("userId", loginResponse?.data?.id.toString())
+                            startActivity(intent)
+                        }
+
                         // Arahkan ke halaman berikutnya jika login berhasil
                     } else {
                         showErrorBottomSheet("Terjadi kesalahan login, silahkan mencoba kembali")
