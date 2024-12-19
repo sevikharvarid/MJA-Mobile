@@ -13,6 +13,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.example.majujayaaccessories.admin.AdminDashboardActivity
 import com.example.majujayaaccessories.databinding.ActivityLoginBinding
 import com.example.majujayaaccessories.request.LoginRequest
 import com.example.majujayaaccessories.response.LoginResponse
@@ -46,25 +47,41 @@ class LoginActivity : AppCompatActivity() {
             val loginRequest = LoginRequest(email, password)
 
             ApiClient.instance.login(loginRequest).enqueue(object : Callback<LoginResponse> {
-                override fun onResponse(call: Call<LoginResponse>, response: Response<LoginResponse>) {
+                override fun onResponse(
+                    call: Call<LoginResponse>,
+                    response: Response<LoginResponse>
+                ) {
                     if (response.isSuccessful && response.body() != null) {
                         val loginResponse = response.body()
                         // Arahkan ke halaman Dashboard jika login berhasil
-                        if(loginResponse?.data?.store != null){
+                        if (loginResponse?.data?.store != null) {
                             // Simpan token di SharedPreferences
-                            val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+                            val sharedPreferences =
+                                getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
                             val editor = sharedPreferences.edit()
                             val token = loginResponse.data.token
+                            val userId = loginResponse.data.id
                             editor.putString("token", token)
+                            editor.putString("userId", userId.toString())
                             editor.apply()
 
                             Log.d("LoginActivity", "Token: $token")
+                            Log.d("LoginActivity", "UserID: $userId")
 
-                            val intent = Intent(this@LoginActivity, DashboardActivity::class.java)
-                            startActivity(intent)
-                            finish()
-                        }else{
-                            val intent = Intent(this@LoginActivity, RegisterStoreActivity::class.java)
+                            if (loginResponse.data.user_type == "ADMIN") {
+                                val intent =
+                                    Intent(this@LoginActivity, AdminDashboardActivity::class.java)
+                                startActivity(intent)
+                                finish()
+                            } else {
+                                val intent =
+                                    Intent(this@LoginActivity, DashboardActivity::class.java)
+                                startActivity(intent)
+                                finish()
+                            }
+                        } else {
+                            val intent =
+                                Intent(this@LoginActivity, RegisterStoreActivity::class.java)
                             intent.putExtra("token", loginResponse?.data?.token)
                             intent.putExtra("userId", loginResponse?.data?.id.toString())
                             startActivity(intent)

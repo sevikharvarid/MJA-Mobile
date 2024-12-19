@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "83249881016",
+    "firebase_url": "https://realtimegps-ee77a-default-rtdb.firebaseio.com",
+    "project_id": "realtimegps-ee77a",
+    "storage_bucket": "realtimegps-ee77a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:83249881016:android:987a150ab7fc13cf5a794d",
+        "android_client_info": {
+          "package_name": "com.example.majujayaaccessories"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "83249881016-tu8afuafuuut14a55lccd0kk009ofdq6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJ9S-lixfudjQB360BAuvKUoAhnOSK9Bw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "83249881016-tu8afuafuuut14a55lccd0kk009ofdq6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:83249881016:android:bce9288a7a8736bf5a794d",
+        "android_client_info": {
+          "package_name": "com.example.realtime_gps"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "83249881016-tu8afuafuuut14a55lccd0kk009ofdq6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJ9S-lixfudjQB360BAuvKUoAhnOSK9Bw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "83249881016-tu8afuafuuut14a55lccd0kk009ofdq6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -12,10 +12,12 @@ constraintlayout = "2.1.4"
 retrofit = "2.9.0"
 gsonConverter = "2.9.0"
 glide = "4.15.1"
+firebaseBom = "33.5.1"
+firebaseStorage = "20.2.0"
+mpAndroidChart = "v3.1.0"
 
 [libraries]
 glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
-#glide-compiler = { group = "com.github.bumptech.glide", name = "compiler", version.ref = "glide" }  # Ubah titik menjadi tanda hubung
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -26,8 +28,10 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 gsonConverter = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "gsonConverter" }
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
+firebase-storage = { group = "com.google.firebase", name = "firebase-storage-ktx", version.ref = "firebaseStorage" }
+mpAndroidChart = { group = "com.github.PhilJay", name = "MPAndroidChart", version.ref = "mpAndroidChart" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-

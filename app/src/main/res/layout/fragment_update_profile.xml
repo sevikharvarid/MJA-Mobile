@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProfileFragment">
+    tools:context=".UpdateProfileFragment">
 
     <!-- Background hijau 1/4 layar di atas -->
     <View
@@ -21,25 +21,25 @@
 
         <!-- Gambar Profil -->
         <ImageView
-            android:id="@+id/profileImageView"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
+            android:id="@+id/profileImageViewUpdate"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:layout_marginTop="16dp"
             android:background="@drawable/circle_background"
-            android:padding="10dp"
+            android:padding="8dp"
             android:scaleType="centerCrop"
             android:src="@android:drawable/ic_menu_gallery" />
 
-        <!-- Tombol Edit Profil -->
-        <Button
-            android:id="@+id/editProfileButton"
+
+        <!-- Change Picture -->
+        <TextView
+            android:id="@+id/changePictureText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:backgroundTint="@color/primary_green"
-            android:text="Edit Profile"
-            android:textAllCaps="false"
-            android:textColor="@android:color/white" />
+            android:text="Change Picture"
+            android:textColor="@color/primary_green"
+            android:textStyle="bold" />
 
         <!-- Nama Lengkap -->
         <TextView
@@ -56,7 +56,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             android:background="@drawable/edit_text_border_black"
-            android:enabled="false"
             android:padding="8dp"
             android:textColor="@color/black" />
 
@@ -75,9 +74,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             android:background="@drawable/edit_text_border_black"
-            android:enabled="false"
             android:padding="8dp"
-
+            android:inputType="textEmailAddress"
             android:textColor="@color/black" />
 
         <!-- No HP -->
@@ -85,7 +83,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="No hp"
+            android:text="No HP"
             android:textColor="@color/black"
             android:textStyle="bold" />
 
@@ -95,51 +93,39 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
             android:background="@drawable/edit_text_border_black"
-            android:enabled="false"
             android:padding="8dp"
-
+            android:inputType="phone"
             android:textColor="@color/black" />
 
-        <!-- Nama Toko -->
+        <!-- Password -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="Nama Toko"
+            android:text="Password"
             android:textColor="@color/black"
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/storeNameEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:background="@drawable/edit_text_border_black"
-            android:enabled="false"
-            android:padding="8dp"
-
-            android:textColor="@color/black" />
-
-        <!-- Alamat -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Alamat"
-            android:textColor="@color/black"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/addressEditText"
+            android:id="@+id/passwordEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:background="@drawable/edit_text_border_black"
-            android:enabled="false"
-            android:inputType="textMultiLine"
-            android:minLines="4"
-            android:padding="12dp"
+            android:padding="8dp"
+            android:inputType="textPassword"
             android:textColor="@color/black" />
+
+        <!-- Tombol Simpan -->
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/primary_green"
+            android:text="Update"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white" />
 
     </LinearLayout>
 </FrameLayout>
