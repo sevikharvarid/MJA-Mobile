@@ -25,7 +25,7 @@ class StockDetailAdapter : RecyclerView.Adapter<StockDetailAdapter.ViewHolder>()
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder.view){
             tvTitle.text = data[position].product_name
-            tvValue.text =  "${data[position].current_stock}/${data[position].total_stock}"
+            tvValue.text =  "${data[position].total_order_quantity}/${data[position].total_stock}"
             }
         }
 

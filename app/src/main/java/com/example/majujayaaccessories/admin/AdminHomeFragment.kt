@@ -1,34 +1,24 @@
 package com.example.majujayaaccessories.admin
 
-import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.GridView
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.majujayaaccessories.ProductGridAdapter
-import com.example.majujayaaccessories.R
+import com.example.majujayaaccessories.admin.entity.ChartDataSet
 import com.example.majujayaaccessories.api.ApiClient
 import com.example.majujayaaccessories.databinding.FragmentAdminHomeBinding
 import com.example.majujayaaccessories.response.ChartProduct
 import com.example.majujayaaccessories.response.ChartResponse
-import com.example.majujayaaccessories.response.Order
 import com.example.majujayaaccessories.response.OrderResponse
 import com.github.mikephil.charting.animation.Easing
-import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
-import com.github.mikephil.charting.formatter.PercentFormatter
-import com.github.mikephil.charting.utils.MPPointF
+import com.github.mikephil.charting.utils.ColorTemplate
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -62,7 +52,7 @@ class AdminHomeFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentAdminHomeBinding.inflate(inflater)
         binding.rvOrder.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -91,17 +81,17 @@ class AdminHomeFragment : Fragment() {
 
 
                     val orderList = response.body()!!.data
-//                    val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
                     Log.d("FetchOrdersData", "order: $orderList")
                     val todayFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                     val today = todayFormat.format(Date())
 
-
-                    // Cek apakah ada data yang ditampilkan
                     if (orderList.isNotEmpty()) {
-                        orderAdapter.setData(orderList)
-                    } else {
-
+                        orderAdapter.setData(orderList.filter { item ->
+                            todayFormat.format(item.created_at) == today
+                        }.take(3))
+                    }
+                    else{
+                        Toast.makeText(requireContext(), "Tidak ada pesanan hari ini", Toast.LENGTH_SHORT).show()
                     }
                 } else {
                     Toast.makeText(
@@ -133,12 +123,12 @@ class AdminHomeFragment : Fragment() {
                         if (response.isSuccessful) {
                             val responseData = response.body()
                             if (responseData != null) {
-                                val products = responseData.data?.products
-                                if (!products.isNullOrEmpty()) {
+                                val products = responseData.data.products
+                                if (products.isNotEmpty()) {
                                     Log.d("FetchStockData", "Products: $products")
                                     setupPieChart(products)
                                     stockDetailAdapter.setData(products)
-                                    legendStockAdapter.setData(products)
+//                                    legendStockAdapter.setData(products)
                                 } else {
                                     Log.e("FetchStockData", "Products list is null or empty")
                                     binding.pieChart.setNoDataText("No data available for Pie Chart")
@@ -198,12 +188,23 @@ class AdminHomeFragment : Fragment() {
         }
 
         val dataSet = PieDataSet(entries, "Stock Data").apply {
-            colors = listOf(Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW)
+            colors = ColorTemplate.MATERIAL_COLORS.toList()
         }
-
         val pieData = PieData(dataSet)
         binding.pieChart.data = pieData
         binding.pieChart.data.setDrawValues(false)
+        val legendItems = mutableListOf<ChartDataSet>()
+
+        val colors = dataSet.colors // Ambil warna
+        val labels = entries.map { it.label } // Ambil label
+        val values = entries.map { it.value }
+        labels.zip(values) { label, value ->
+            val color = colors[labels.indexOf(label)]
+            legendItems.add(ChartDataSet(label, color, value))
+        }
+
+        legendStockAdapter.setData(legendItems)
+
         binding.pieChart.invalidate()
     }
 }

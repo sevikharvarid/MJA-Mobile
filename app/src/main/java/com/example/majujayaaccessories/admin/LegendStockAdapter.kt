@@ -7,16 +7,17 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.majujayaaccessories.R
+import com.example.majujayaaccessories.admin.entity.ChartDataSet
 import com.example.majujayaaccessories.databinding.ItemOrderBinding
 import com.example.majujayaaccessories.databinding.ItemStockBinding
 import com.example.majujayaaccessories.response.ChartProduct
 import com.example.majujayaaccessories.response.Order
 
 class LegendStockAdapter : RecyclerView.Adapter<LegendStockAdapter.ViewHolder>() {
-    private var data = ArrayList<ChartProduct>()
+    private var data = ArrayList<ChartDataSet>()
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setData(chartProduct: List<ChartProduct>) {
+    fun setData(chartProduct: List<ChartDataSet>) {
         data.clear()
         data.addAll(chartProduct)
         notifyDataSetChanged()
@@ -24,7 +25,9 @@ class LegendStockAdapter : RecyclerView.Adapter<LegendStockAdapter.ViewHolder>()
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         with(holder.view){
-            productTextView.text =  "${data[position].percentage}%"
+            tvLabel.text =  data[position].label
+            tvValue.text =  "(${Math.round(data[position].value).toInt()}%)"
+            vwLegendColor.setBackgroundColor(data[position].color)
             }
         }
 
