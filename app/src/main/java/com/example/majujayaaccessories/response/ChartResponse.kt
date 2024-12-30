@@ -1,23 +1,23 @@
 package com.example.majujayaaccessories.response
 
 data class ChartResponse(
-    val statusCode: Int,
+    val status_code: Int,
     val message: String,
     val data: ChartData
 )
 
 data class ChartData(
     val products: List<ChartProduct>,
-    val totalProducts: Int,
-    val totalStock: Int
+    val total_products: Int,
+    val total_stock: Int
 )
 
 data class ChartProduct(
-    val productId: Int,
-    val productName: String,
-    val currentStock: Int,
-    val totalOrderQuantity: Int,
-    val totalStock: Int,
+    val product_id: Int,
+    val product_name: String,
+    val current_stock: Int,
+    val total_order_quantity: Int,
+    val total_stock: Int,
     val percentage: Double,
-    val percentageInAllStock: Double
+    val percentage_in_all_stock: Double
 )

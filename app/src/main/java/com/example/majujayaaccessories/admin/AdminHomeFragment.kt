@@ -1,33 +1,57 @@
 package com.example.majujayaaccessories.admin
 
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.GridView
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.majujayaaccessories.ProductGridAdapter
 import com.example.majujayaaccessories.R
 import com.example.majujayaaccessories.api.ApiClient
+import com.example.majujayaaccessories.databinding.FragmentAdminHomeBinding
 import com.example.majujayaaccessories.response.ChartProduct
 import com.example.majujayaaccessories.response.ChartResponse
+import com.example.majujayaaccessories.response.Order
+import com.example.majujayaaccessories.response.OrderResponse
+import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.formatter.PercentFormatter
+import com.github.mikephil.charting.utils.MPPointF
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class AdminHomeFragment : Fragment() {
 
     private var token: String? = null
-    private lateinit var pieChart: PieChart
-    private lateinit var recyclerView: RecyclerView
+    private val orderAdapter : OrderAdapter by lazy {
+        OrderAdapter()
+    }
 
+    private val stockDetailAdapter : StockDetailAdapter by lazy {
+        StockDetailAdapter()
+    }
+
+    private val legendStockAdapter : LegendStockAdapter by lazy {
+        LegendStockAdapter()
+    }
+
+    private lateinit var binding: FragmentAdminHomeBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -39,14 +63,60 @@ class AdminHomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_admin_home, container, false)
-
-        pieChart = view.findViewById(R.id.pieChart)
-        recyclerView = view.findViewById(R.id.recyclerView)
-
+        binding = FragmentAdminHomeBinding.inflate(inflater)
+        binding.rvOrder.apply {
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            adapter = orderAdapter
+        }
+        binding.rvDetailStock.apply {
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            adapter = stockDetailAdapter
+        }
+        binding.rvLegend.apply {
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+            adapter = legendStockAdapter
+        }
+        fetchOrders()
         fetchStockData()
+        return binding.root
+    }
 
-        return view
+    private fun fetchOrders() {
+        val call = ApiClient.instance.getOrders("Bearer $token")
+        call.enqueue(object : Callback<OrderResponse> {
+            override fun onResponse(call: Call<OrderResponse>, response: Response<OrderResponse>) {
+
+                if (response.isSuccessful && response.body() != null) {
+                    Toast.makeText(requireContext(), "Berhasil get", Toast.LENGTH_SHORT).show()
+
+
+                    val orderList = response.body()!!.data
+//                    val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+                    Log.d("FetchOrdersData", "order: $orderList")
+                    val todayFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                    val today = todayFormat.format(Date())
+
+
+                    // Cek apakah ada data yang ditampilkan
+                    if (orderList.isNotEmpty()) {
+                        orderAdapter.setData(orderList)
+                    } else {
+
+                    }
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Gagal mendapatkan data pesanan",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+            override fun onFailure(call: Call<OrderResponse>, t: Throwable) {
+                Log.d("HomeFragment", "On Failure ${t.message}")
+                Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     private fun fetchStockData() {
@@ -67,10 +137,11 @@ class AdminHomeFragment : Fragment() {
                                 if (!products.isNullOrEmpty()) {
                                     Log.d("FetchStockData", "Products: $products")
                                     setupPieChart(products)
-                                    setupRecyclerView(products)
+                                    stockDetailAdapter.setData(products)
+                                    legendStockAdapter.setData(products)
                                 } else {
                                     Log.e("FetchStockData", "Products list is null or empty")
-                                    pieChart.setNoDataText("No data available for Pie Chart")
+                                    binding.pieChart.setNoDataText("No data available for Pie Chart")
                                 }
                             } else {
                                 Log.e("FetchStockData", "Response body is null")
@@ -99,19 +170,30 @@ class AdminHomeFragment : Fragment() {
     private fun setupPieChart(products: List<ChartProduct>) {
         Log.d("SetupPieChart", "Number of products: ${products.size}")
         val entries = products.mapNotNull {
-            if (it.percentageInAllStock > 0) {
-                Log.d("SetupPieChart", "Adding product: ${it.productName} (${it.percentageInAllStock})")
-                PieEntry(it.percentageInAllStock.toFloat(), it.productName)
+            if (it.percentage_in_all_stock > 0) {
+                with(binding){
+                    pieChart.setUsePercentValues(true)
+                    pieChart.isRotationEnabled = false
+                    pieChart.setDrawEntryLabels(false)
+                    pieChart.description.isEnabled = false
+                    pieChart.isDrawHoleEnabled = false
+                    pieChart.setDrawCenterText(true)
+                    pieChart.animateY(1400, Easing.EaseInOutQuad)
+                    pieChart.legend.isEnabled = false
+                }
+
+                Log.d("SetupPieChart", "Adding product: ${it.product_name} (${it.percentage_in_all_stock})")
+                PieEntry(it.percentage.toFloat(), it.product_name)
             } else {
-                Log.w("SetupPieChart", "Skipping product with zero or negative percentage: ${it.productName}")
+                Log.w("SetupPieChart", "Skipping product with zero or negative percentage: ${it.product_name}")
                 null
             }
         }
 
         if (entries.isEmpty()) {
             Log.w("SetupPieChart", "No valid data for Pie Chart")
-            pieChart.setNoDataText("No valid data available for Pie Chart")
-            pieChart.clear()
+            binding.pieChart.setNoDataText("No valid data available for Pie Chart")
+            binding.pieChart.clear()
             return
         }
 
@@ -120,12 +202,8 @@ class AdminHomeFragment : Fragment() {
         }
 
         val pieData = PieData(dataSet)
-        pieChart.data = pieData
-        pieChart.invalidate()
-    }
-
-    private fun setupRecyclerView(products: List<ChartProduct>) {
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = StockAdapter(products)
+        binding.pieChart.data = pieData
+        binding.pieChart.data.setDrawValues(false)
+        binding.pieChart.invalidate()
     }
 }

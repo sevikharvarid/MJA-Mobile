@@ -24,7 +24,7 @@ class StockAdapter(private val products: List<ChartProduct>) :
     override fun onBindViewHolder(holder: StockViewHolder, position: Int) {
         val product = products[position]
         // Gunakan properti baru dari ChartProduct
-        holder.productTextView.text = "${product.productName} (${product.percentageInAllStock}%)"
+        holder.productTextView.text = "${product.product_name} (${product.percentage_in_all_stock}%)"
     }
 
     override fun getItemCount() = products.size
