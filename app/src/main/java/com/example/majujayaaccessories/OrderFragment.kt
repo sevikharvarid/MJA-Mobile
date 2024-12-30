@@ -89,6 +89,8 @@ class OrderFragment : Fragment() {
                                 adapter.notifyDataSetChanged()
                                 Toast.makeText(requireContext(), "Order placed successfully", Toast.LENGTH_SHORT).show()
                             } else {
+                                Log.d("OrderFragment","Response ${response.message()}")
+
                                 Toast.makeText(requireContext(), "Failed to place order", Toast.LENGTH_SHORT).show()
                             }
                             hideLoadingDialog()
