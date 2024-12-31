@@ -1,5 +1,7 @@
 package com.example.majujayaaccessories.admin
 
+import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,12 +10,17 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.majujayaaccessories.R
 import com.example.majujayaaccessories.admin.entity.ChartDataSet
+import com.example.majujayaaccessories.admin.entity.StoreOrderData
 import com.example.majujayaaccessories.api.ApiClient
 import com.example.majujayaaccessories.databinding.FragmentAdminHomeBinding
 import com.example.majujayaaccessories.response.ChartProduct
 import com.example.majujayaaccessories.response.ChartResponse
+import com.example.majujayaaccessories.response.GetStoreResponse
+import com.example.majujayaaccessories.response.Order
 import com.example.majujayaaccessories.response.OrderResponse
+import com.example.majujayaaccessories.response.Store
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
@@ -42,6 +49,10 @@ class AdminHomeFragment : Fragment() {
     }
 
     private lateinit var binding: FragmentAdminHomeBinding
+
+//    private val dataStoreOrder = mutableListOf<StoreOrderData>()
+    private val dataOrder = mutableListOf<Order>()
+    private val dataStore = mutableListOf<Store>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -66,11 +77,92 @@ class AdminHomeFragment : Fragment() {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
             adapter = legendStockAdapter
         }
+
+        binding.tvSeeDetail.setOnClickListener {
+            val orderFragment = AdminOrderFragment().apply {
+                arguments = Bundle().apply {
+                    putString("token", token)
+                }
+            }
+            loadFragment(orderFragment)
+        }
         fetchOrders()
         fetchStockData()
         return binding.root
     }
 
+    private fun loadFragment(fragment: Fragment) {
+        val sharedPreferences = requireActivity().getSharedPreferences("AdminPrefs", Context.MODE_PRIVATE)
+        val token = sharedPreferences.getString("token", null)
+
+        if (token != null) {
+            fragment.arguments = Bundle().apply {
+                putString("token", token)
+            }
+        } else {
+            Log.e("AdminDashboardActivity", "Token tidak ditemukan, fragment tidak dimuat.")
+            // Redirect ke layar login jika token tidak ditemukan
+        }
+
+
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainer, fragment)
+                .addToBackStack(null)
+                .commit()
+
+    }
+
+    private fun fetchStore() {
+        val call = ApiClient.instance.getStores("Bearer $token")
+        call.enqueue(object : Callback<GetStoreResponse> {
+            override fun onResponse(call: Call<GetStoreResponse>, response: Response<GetStoreResponse>) {
+
+                if (response.isSuccessful && response.body() != null) {
+                    Toast.makeText(requireContext(), "Get Store Data", Toast.LENGTH_SHORT).show()
+
+
+                    val storeList = response.body()!!.data
+                    Log.d("FetchStoreData", "order: $storeList")
+
+                    if (storeList.isNotEmpty()) {
+                        dataStore.clear()
+                        dataStore.addAll(storeList)
+
+                        val dataList = dataOrder.mapNotNull { order ->
+                            val matchingStore = dataStore.find { it.id == order.store_id }
+                            matchingStore?.let { StoreOrderData(
+                                createdAt = order.created_at,
+                                id = it.id,
+                                userId = it.user_id,
+                               storeName =  it.store_name,
+                                storeAddress = it.store_address,
+                                user = it.user,
+                                orderItems = order.order_items
+                            ) }
+                        }
+
+                        Log.d("dataStoreOrder","dataList $dataList")
+
+                        orderAdapter.setData(dataList)
+                    }
+                    else{
+                        Toast.makeText(requireContext(), "Tidak ada toko", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Gagal mendapatkan data toko",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+            override fun onFailure(call: Call<GetStoreResponse>, t: Throwable) {
+                Log.d("StorePage", "On Failure ${t.message}")
+                Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
     private fun fetchOrders() {
         val call = ApiClient.instance.getOrders("Bearer $token")
         call.enqueue(object : Callback<OrderResponse> {
@@ -86,9 +178,11 @@ class AdminHomeFragment : Fragment() {
                     val today = todayFormat.format(Date())
 
                     if (orderList.isNotEmpty()) {
-                        orderAdapter.setData(orderList.filter { item ->
+                        dataOrder.clear()
+                        dataOrder.addAll(orderList.filter { item ->
                             todayFormat.format(item.created_at) == today
                         }.take(3))
+                        fetchStore()
                     }
                     else{
                         Toast.makeText(requireContext(), "Tidak ada pesanan hari ini", Toast.LENGTH_SHORT).show()
@@ -187,8 +281,15 @@ class AdminHomeFragment : Fragment() {
             return
         }
 
+        val dynamicColors = entries.map {
+            Color.rgb(
+                (0..255).random(),
+                (0..255).random(),
+                (0..255).random()
+            )
+        }
         val dataSet = PieDataSet(entries, "Stock Data").apply {
-            colors = ColorTemplate.MATERIAL_COLORS.toList()
+            colors = dynamicColors
         }
         val pieData = PieData(dataSet)
         binding.pieChart.data = pieData

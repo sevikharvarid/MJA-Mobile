@@ -54,7 +54,7 @@ class AdminDashboardActivity : AppCompatActivity() {
                     true
                 }
                 R.id.menu_orders -> {
-                    val orderFragment = AdminOrderFragment().apply {
+                    val orderFragment = AdminHistoryFragment().apply {
                         arguments = Bundle().apply {
                             putString("token", token)
                         }
@@ -62,8 +62,8 @@ class AdminDashboardActivity : AppCompatActivity() {
                     loadFragment(orderFragment)
                     true
                 }
-                R.id.menu_history -> {
-                    val historyFragment = AdminHistoryFragment().apply {
+                R.id.menu_store -> {
+                    val historyFragment = AdminStoreFragment().apply {
                         arguments = Bundle().apply {
                             putString("token", token)
                         }

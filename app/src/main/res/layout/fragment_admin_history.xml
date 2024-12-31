@@ -13,17 +13,16 @@
         android:paddingLeft="16dp"
         android:paddingTop="20dp"
         android:paddingBottom="20dp"
-        android:text="Daftar Toko"
+        android:text="Riwayat"
         android:textColor="@android:color/white"
         android:textSize="24sp"
         android:textStyle="bold" />
 
-    <ImageView
-        android:id="@+id/fullScreenImageView"
+    <!-- RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvHistory"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitCenter"
-        android:src="@drawable/img_admin_history" />
+        android:layout_height="match_parent"/>
 
     <!--    <TextView-->
     <!--        android:layout_width="match_parent"-->

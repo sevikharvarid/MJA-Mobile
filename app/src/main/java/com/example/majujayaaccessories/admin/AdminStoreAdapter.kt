@@ -8,18 +8,20 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.majujayaaccessories.R
-import com.example.majujayaaccessories.admin.entity.StoreOrderData
+import com.example.majujayaaccessories.databinding.ItemAdminStoreBinding
 import com.example.majujayaaccessories.databinding.ItemOrderBinding
+import com.example.majujayaaccessories.databinding.ItemStockDetailBinding
 import com.example.majujayaaccessories.response.ChartProduct
 import com.example.majujayaaccessories.response.Order
+import com.example.majujayaaccessories.response.Store
 
-class OrderAdapter : RecyclerView.Adapter<OrderAdapter.ViewHolder>() {
-    private var data = ArrayList<StoreOrderData>()
+class AdminStoreAdapter : RecyclerView.Adapter<AdminStoreAdapter.ViewHolder>() {
+    private var data = ArrayList<Store>()
 
     @SuppressLint("NotifyDataSetChanged")
-    fun setData(order: List<StoreOrderData>) {
+    fun setData(store: List<Store>) {
         data.clear()
-        data.addAll(order)
+        data.addAll(store)
         notifyDataSetChanged()
     }
 
@@ -29,16 +31,17 @@ class OrderAdapter : RecyclerView.Adapter<OrderAdapter.ViewHolder>() {
                 .load(data[position].user.image_url)
                 .error(R.drawable.circle_background)
                 .into(ivIconOrder)
-            tvOrder.text =  data[position].storeName
-            tvOrderItem.text =  data[position].orderItems.joinToString { it.product.product_name }
+            tvStoreTitle.text = data[position].id.toString()
+            tvStoreName.text =  data[position].store_name
+            tvStoreAddress.text =  data[position].store_address
             }
         }
 
     override fun getItemCount(): Int = data.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder = ViewHolder(
-        ItemOrderBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        ItemAdminStoreBinding.inflate(LayoutInflater.from(parent.context), parent, false)
     )
 
-    class ViewHolder(val view: ItemOrderBinding) : RecyclerView.ViewHolder(view.root)
+    class ViewHolder(val view: ItemAdminStoreBinding) : RecyclerView.ViewHolder(view.root)
 }

@@ -5,6 +5,7 @@ import com.example.majujayaaccessories.request.LoginRequest
 import com.example.majujayaaccessories.request.OrderRequest
 import com.example.majujayaaccessories.request.StoreRequest
 import com.example.majujayaaccessories.response.ChartResponse
+import com.example.majujayaaccessories.response.GetStoreResponse
 import com.example.majujayaaccessories.response.LoginResponse
 import com.example.majujayaaccessories.response.OrderResponse
 import com.example.majujayaaccessories.response.StoreResponse
@@ -74,5 +75,9 @@ interface ApiService {
     @GET("api/v1/reports/stocks")
     fun getStockReports(@Header("Authorization") token: String): Call<ChartResponse>
 
+    @GET("api/v1/stores")
+    fun getStores(
+        @Header("Authorization") token: String
+    ): Call<GetStoreResponse>
 
 }
